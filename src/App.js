@@ -17,7 +17,7 @@ function Nav(props) {
     let t = props.topics[i];
     lis.push(<li key={t.id}><a id={t.id} href={'/read/'+t.id} onClick={event=>{
       event.preventDefault();
-      props.onChangeMode(event.target.id);
+      props.onChangeMode(Number(event.target.id));
     }}>{t.title}</a></li>)
   }
   return <nav>
@@ -34,6 +34,21 @@ function Article(props) {
 </article>
 }
 
+function Create(props) {
+  return <article>
+    <h2>Create</h2>
+    <form onSubmit={event =>{
+      event.preventDefault();
+      const title = event.target.title.value;
+      const body = event.target.body.value;
+      props.onCreate(title, body);
+    }}>
+      <p><input type="text" name="title" placeholder='title'/></p>
+      <p><textarea name="body" placeholder='body'></textarea></p>
+      <p><input type='submit' value='Create'></input></p>
+    </form>
+  </article>
+}
 
 function App() {
   const[mode, setMode] = useState('Welcome');
@@ -57,6 +72,10 @@ function App() {
       }
     }
     content = <Article title={title} body = {body}></Article>
+  }else if(mode === 'Create') {
+    content = <Create onCreate={(title, body)=>{
+
+    }}></Create>
   }
 
   return (
@@ -69,6 +88,10 @@ function App() {
           setId(_id);
         }}></Nav>
         {content}
+        <a href="/create" onClick={event=>{
+          event.preventDefault();
+          setMode('Create');
+        }}>Create</a>
     </div>
   );
 }
